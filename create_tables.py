@@ -1,6 +1,16 @@
 import configparser
 import psycopg2
-from sql_queries import create_table_queries, drop_table_queries
+from sql_queries import create_table_queries, drop_table_queries, music_schema_create, music_schema_drop
+
+
+def drop_schema(cur, conn):
+    cur.execute(music_schema_drop)
+    conn.commit()
+
+
+def create_schema(cur, conn):
+    cur.execute(music_schema_create)
+    conn.commit()
 
 
 def drop_tables(cur, conn):
@@ -22,28 +32,11 @@ def main():
     conn = psycopg2.connect("host={} dbname={} user={} password={} port={}".format(
         *config['CLUSTER'].values()))
     cur = conn.cursor()
-    cur.execute(""" 
-                CREATE TABLE staging_events(
-                artist varchar(100) NULL,
-                auth varchar(50) NULL,
-                first_name varchar(50) NULL,
-                last_name varchar(50) NULL,
-                length float NULL,
-                level varchar(50) NULL,
-                location varchar(250) NULL,
-                method varchar(50) NULL,
-                page varchar(50) NULL,
-                registration decimal(16,2) NULL,
-                session_id int NULL,
-                song varchar(250) NULL,
-                status int NULL,
-                ts int NULL,
-                user_agent varchar(500) NULL,
-                user_id varchar(50) NULL)
-                """)
-    conn.commit()
-#     drop_tables(cur, conn)
-#     create_tables(cur, conn)
+    drop_tables(cur, conn)
+    drop_schema(cur, conn)
+
+    create_schema(cur, conn)
+    create_tables(cur, conn)
 
     conn.close()
 

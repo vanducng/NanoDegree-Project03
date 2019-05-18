@@ -1,1 +1,2 @@
-*.cfg
+__pycache__/sql_queries.cpython-36.pyc
+Nano Degree - Project 03.ipynb
