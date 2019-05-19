@@ -10,7 +10,22 @@ This project is to build a data warehouse on Redshift for a music application. T
 
 2. Then run `python etl.py` to start the job of trasferring data from S3 to staging tables (staging_events & staging_songs), do transforming and loading data to targeted table designed on Redshift DW.
 
-3. Run `python test.py` to examine the results.
+3. Run `python test.py` to examine the results. For example, below query to anwer the question of what is the top 10 songs listened in 2018.
+
+```sql
+SELECT s.title AS song_title,
+       COUNT(songplay_id) AS listened_times,
+       a.name AS artist_name
+FROM music.songplays sp
+INNER JOIN music.songs s ON s.song_id = sp.song_id
+INNER JOIN music.artists a ON a.artist_id = sp.artist_id
+WHERE EXTRACT(YEAR FROM start_time) = 2018
+GROUP BY s.title, a.name
+ORDER BY listened_times DESC
+LIMIT 10
+```
+Result:
+![Top listened songs in 2018](/images/top_songs_listened.png)
 
 ## Files in the repository
 1. `dwh.cfg` contains configuration parameters to access AWS Redshift cluster, S3 bucket and IAM role.

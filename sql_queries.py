@@ -157,6 +157,7 @@ INSERT INTO music.users(user_id, first_name, last_name, gender, level)
 SELECT DISTINCT user_id, first_name, last_name, gender, level
 FROM music.staging_events
 WHERE TRIM(user_id) <> ''
+AND page = 'NextSong';
 """)
 
 song_table_insert = ("""
@@ -174,14 +175,14 @@ FROM music.staging_songs
 time_table_insert = ("""
 INSERT INTO music.time(start_time, hour, day, week, month, year, weekday)
 SELECT  DISTINCT
-        TIMESTAMP 'epoch' + ts/1000 *INTERVAL '1 second' AS start_time,
-        DATEPART(h, TIMESTAMP 'epoch' + ts/1000 *INTERVAL '1 second') AS hour,
-        DATEPART(d, TIMESTAMP 'epoch' + ts/1000 *INTERVAL '1 second')  AS day,
-        DATEPART(w, TIMESTAMP 'epoch' + ts/1000 *INTERVAL '1 second')  AS week,
-        DATEPART(mon, TIMESTAMP 'epoch' + ts/1000 *INTERVAL '1 second')  AS month,
-        DATEPART(y, TIMESTAMP 'epoch' + ts/1000 *INTERVAL '1 second')  AS year,
-        DATEPART(dow, TIMESTAMP 'epoch' + ts/1000 *INTERVAL '1 second')  AS weekday
-FROM music.staging_events
+        start_time,
+        EXTRACT(hour FROM start_time) AS hour,
+        EXTRACT(day FROM start_time) AS day,
+        EXTRACT(week FROM start_time) AS week,
+        EXTRACT(month FROM start_time) AS month,
+        EXTRACT(year FROM start_time) AS year,
+        EXTRACT(dow FROM start_time) AS weekday
+FROM music.songplays
 """)
 
 # QUERY LISTS
@@ -205,7 +206,7 @@ WHERE EXTRACT(YEAR FROM start_time) = 2018
 GROUP BY s.title, a.name
 ORDER BY listened_times DESC
 LIMIT 10
- """
+"""
 
 
 create_table_queries = [staging_events_table_create, staging_songs_table_create,

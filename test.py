@@ -5,6 +5,9 @@ import pandas as pd
 
 
 def analysis_query(cur, conn):
+    """
+    Run the analysis test to evaluate the data integration result
+    """
     for query in select_queries:
         df = pd.read_sql_query(query, conn)
         conn.commit()

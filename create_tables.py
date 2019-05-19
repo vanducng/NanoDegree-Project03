@@ -4,22 +4,34 @@ from sql_queries import create_table_queries, drop_table_queries, music_schema_c
 
 
 def drop_schema(cur, conn):
+    """
+    Drop schema named music
+    """
     cur.execute(music_schema_drop)
     conn.commit()
 
 
 def create_schema(cur, conn):
+    """
+    Create schema named music
+    """
     cur.execute(music_schema_create)
     conn.commit()
 
 
 def drop_tables(cur, conn):
+    """
+    Drop all tables (staging_events, staging_songs, songplays, users, songs, artists, time)
+    """
     for query in drop_table_queries:
         cur.execute(query)
         conn.commit()
 
 
 def create_tables(cur, conn):
+    """
+    Create tables (staging_events, staging_songs, songplays, users, songs, artists, time)
+    """
     for query in create_table_queries:
         cur.execute(query)
         conn.commit()
