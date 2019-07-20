@@ -1,4 +1,4 @@
-# Project03 - Data Warehouse on Cloud
+# Data Warehouse on Cloud
 ## Summary of project
 This project is to build a data warehouse on Redshift for a music application. The logs from application will contains the event logs (historical music listening from users) and song library data. Data are stored as json format in AWS S3. There are three main tasks involved to accomplete the project:
 > * Extract data from S3 to staging tables designed on Redshift
